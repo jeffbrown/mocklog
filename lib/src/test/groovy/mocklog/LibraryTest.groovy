@@ -1,8 +1,11 @@
 package mocklog
 
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Specification
+
+import static org.mockito.Mockito.mockStatic
 
 class LibraryTest extends Specification {
     def "test mocking out static property"() {
@@ -13,8 +16,8 @@ class LibraryTest extends Specification {
                 loggedValue = arg[0]
             }
         }
-        GroovySpy(LoggerFactory, global: true)
-        1 * LoggerFactory.getLogger(_) >> logger
+        def mockFactory = mockStatic(LoggerFactory)
+        mockFactory.when(() -> LoggerFactory.getLogger((Library))).thenReturn(logger)
 
         when:
         new Library().someMethod('Jeff')
